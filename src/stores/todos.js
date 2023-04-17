@@ -1,5 +1,8 @@
 import { ref, reactive } from 'vue'
 import { defineStore } from 'pinia'
+import { createToaster } from "@meforma/vue-toaster";
+
+const toaster = createToaster();
 
 export const useTodosStore = defineStore('todos', () => {
     
@@ -13,9 +16,19 @@ export const useTodosStore = defineStore('todos', () => {
 
    
     const addTodo = () => {
+        if(todos.value.find(todo=>todo.name==todoForm.todoName)){
+            toaster.error("Un todo avec ce nom existe déjà.")
+            return
+        }
         todos.value.push({name:todoForm.todoName, nbHours:Number(todoForm.nbHours), responsableId : todoForm.selectedResponsable, isSelected:false})
         console.log(todos)
         resetInputs()
+    }
+
+    const deleteTodo=(name)=>{
+        
+        const index = todos.value.indexOf(todos.value.find(todo=>todo.name==name))
+        todos.value.splice(index, 1)
     }
 
     const resetInputs = () => {
@@ -27,6 +40,7 @@ export const useTodosStore = defineStore('todos', () => {
     return{
         todoForm,
         addTodo,
+        deleteTodo,
         todos
     }
 

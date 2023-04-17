@@ -5,9 +5,15 @@
         <span>{{ nbHours }}</span>
         <span>{{ isSelected }}</span>
     </div>
+    <button @click="todoStore.deleteTodo(name)">Delete</button>
+
 </template>
 
 <script setup>
+
+import {useTodosStore} from '../stores/todos'
+
+const todoStore = useTodosStore()
 
 const props = defineProps({
     name:{

@@ -10,7 +10,9 @@
         <option :value="responsable.id" v-for="responsable in responsables" :key="responsable.id">{{ responsable.name }}</option>
       </select>
       <button type="submit">Ajouter todo</button>
+      
     </form>
+    <button class="disabled:opacity-50 bg-white" :disabled="todoStore.todos.every(todo=>todo.isSelected==false)" @click="todoStore.removeSelected">Delete selected todos</button>
 
     <div>
       <Todo v-for="todo in todoStore.todos" :name="todo.name" :responsableId="todo.responsableId" :nbHours="todo.nbHours" :isSelected="todo.isSelected" :key="todo.id"/>

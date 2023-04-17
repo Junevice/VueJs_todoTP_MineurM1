@@ -1,11 +1,14 @@
 <template>
-    <div>
+    <div class="flex">
         <span>{{ name }}</span>
         <span>{{ responsables.find(res => res.id == responsableId).name }}</span>
         <span>{{ nbHours }}</span>
-        <span>{{ isSelected }}</span>
+        <div @click="todoStore.toggleSelect(name)">
+            <input class="pointer-events-none" type="checkbox" :checked="isSelected">
+        </div>
     </div>
-    <button @click="todoStore.deleteTodo(name)">Delete</button>
+    <!-- <button @click="todoStore.deleteTodo(name)">Delete</button> -->
+    
 
 </template>
 

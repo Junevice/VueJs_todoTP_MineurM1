@@ -25,8 +25,16 @@ export const useTodosStore = defineStore('todos', () => {
         resetInputs()
     }
 
+    const toggleSelect=(name)=>{
+        const isSelected = todos.value.find(todo => todo.name == name).isSelected
+        todos.value.find(todo => todo.name == name).isSelected = !isSelected
+    }
+
+    const removeSelected = () => {
+        todos.value = todos.value.filter(todo=>todo.isSelected==false)
+    }
+
     const deleteTodo=(name)=>{
-        
         const index = todos.value.indexOf(todos.value.find(todo=>todo.name==name))
         todos.value.splice(index, 1)
     }
@@ -41,6 +49,8 @@ export const useTodosStore = defineStore('todos', () => {
         todoForm,
         addTodo,
         deleteTodo,
+        toggleSelect,
+        removeSelected,
         todos
     }
 

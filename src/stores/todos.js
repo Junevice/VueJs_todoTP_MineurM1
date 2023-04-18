@@ -4,7 +4,7 @@ import { createToaster } from "@meforma/vue-toaster";
 
 const toaster = createToaster();
 
-export const useTodosStore = defineStore('todos', () => {
+export const useTodoStore = defineStore('todos', () => {
     
     const todoForm = reactive({
         todoName:'',
@@ -30,6 +30,15 @@ export const useTodosStore = defineStore('todos', () => {
         todos.value.find(todo => todo.name == name).isSelected = !isSelected
     }
 
+    const editTodo = (name, form) =>{
+        let currentTodo = todos.value.find(todo => todo.name == name)
+        if(currentTodo){
+            currentTodo.name = form.name
+            currentTodo.nbHours = Number(form.nbHours)
+            currentTodo.responsableId = form.responsableId
+        }
+    }
+
     const removeSelected = () => {
         todos.value = todos.value.filter(todo=>todo.isSelected==false)
     }
@@ -50,6 +59,7 @@ export const useTodosStore = defineStore('todos', () => {
         addTodo,
         deleteTodo,
         toggleSelect,
+        editTodo,
         removeSelected,
         todos
     }

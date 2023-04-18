@@ -7,7 +7,7 @@
       <input type="text" placeholder="Nombre heures" v-model="todoStore.todoForm.nbHours">
       <select name="" id="" v-model="todoStore.todoForm.selectedResponsable">
         <option value="" disabled selected>Responsables</option>
-        <option :value="responsable.id" v-for="responsable in responsables" :key="responsable.id">{{ responsable.name }}</option>
+        <option :value="responsable.id" v-for="responsable in responsableStore.responsables" :key="responsable.id">{{ responsable.name }}</option>
       </select>
       <button type="submit">Ajouter todo</button>
       
@@ -22,16 +22,11 @@
 
 <script setup>
 import Todo from '../components/Todo.vue'
-import {ref} from 'vue'
-import { useTodosStore } from '../stores/todos';
+import { useTodoStore } from '../stores/todos';
+import { useResponsableStore } from '../stores/responsables'
 
-const todoStore = useTodosStore()
-
-const responsables = [
-  {id: 1, name: 'Soren Desrondiers'},
-  {id: 2, name: 'Charlotte Leriche'},
-  {id: 3, name: 'Noam Belanger'},
-]
+const todoStore = useTodoStore()
+const responsableStore = useResponsableStore()
 
 
 

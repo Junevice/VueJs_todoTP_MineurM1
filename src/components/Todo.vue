@@ -1,5 +1,5 @@
 <template>
-    <div class="flex" @dblclick="toggleIsModified(!isModified)" v-if="!isModified">
+    <div class="flex" @dblclick="toggleIsModified(true)" v-if="!isModified">
         <span>{{ name }}</span>
         <span>{{ responsableStore.responsables.find(res => res.id == responsableId).name }}</span>
         <span>{{ nbHours }}</span>
@@ -9,7 +9,7 @@
     </div>
 
     <!-- Edition -->
-    <div v-else>
+    <div class="flex gap-4" v-else>
         <form action="" @submit.prevent="submitEdition(name, form)">
             <input type="text" v-model="editionForm.name">
             <input type="text" v-model="editionForm.nbHours">
@@ -18,7 +18,9 @@
                 <option :value="responsable.id" v-for="responsable in responsableStore.responsables" :key="responsable.id">{{ responsable.name }}</option>
             </select>
             <button type="submit">Edit todo</button>
+            
         </form>
+        <button @click="toggleIsModified(false)">cancel</button>
     </div>
     
 
@@ -28,7 +30,7 @@
 
 import {useTodoStore} from '../stores/todos'
 import {useResponsableStore} from '../stores/responsables'
-import {ref, reactive} from 'vue'
+import {ref, reactive, onMounted} from 'vue'
 
 const todoStore = useTodoStore()
 const responsableStore = useResponsableStore()
@@ -52,6 +54,10 @@ const props = defineProps({
     }
 })
 
+onMounted(()=>{
+    resetEditionForm()
+})
+
 const editionForm = reactive({
     name:props.name,
     nbHours:props.nbHours,
@@ -60,13 +66,25 @@ const editionForm = reactive({
 
 const isModified = ref(false)
 
-const toggleIsModified = (bool) => {
-    isModified.value=bool
+const resetEditionForm = () => {
+    editionForm.name=props.name
+    editionForm.nbHours=props.nbHours
+    editionForm.responsableId=props.responsableId
 }
 
-const submitEdition = (name, form) =>{
-    todoStore.editTodo(name, form)
-    toggleIsModified(!isModified)
+const toggleIsModified = (bool) => {
+    isModified.value=bool
+
+    resetEditionForm()
+}
+
+const submitEdition = (name) =>{
+    
+    const edition = todoStore.editTodo(name, editionForm)
+    if(edition=='edited'){
+        toggleIsModified(!isModified)
+    }
+    
 }
 
 

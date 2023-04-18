@@ -3,9 +3,9 @@
     <h1 class="text-2xl mb-8">Todo TP 1 Vue3</h1>
 
     <form @submit.prevent="todoStore.addTodo()">
-      <input type="text" placeholder="Todo Name" v-model="todoStore.todoForm.todoName">
+      <input type="text" placeholder="Todo Name" v-model="todoStore.todoForm.name">
       <input type="text" placeholder="Nombre heures" v-model="todoStore.todoForm.nbHours">
-      <select name="" id="" v-model="todoStore.todoForm.selectedResponsable">
+      <select name="" id="" v-model="todoStore.todoForm.responsableId">
         <option value="" disabled selected>Responsables</option>
         <option :value="responsable.id" v-for="responsable in responsableStore.responsables" :key="responsable.id">{{ responsable.name }}</option>
       </select>

@@ -7,22 +7,54 @@ const toaster = createToaster();
 export const useTodoStore = defineStore('todos', () => {
     
     const todoForm = reactive({
-        todoName:'',
+        name:'',
         nbHours:'',
-        selectedResponsable:''
+        responsableId:''
     })
     
     const todos = ref([])
 
-   
-    const addTodo = () => {
-        if(todos.value.find(todo=>todo.name==todoForm.todoName)){
-            toaster.error("Un todo avec ce nom existe déjà.")
-            return
+   const generalVerificationForm = (form) =>{
+    console.log(form)
+    if(form.name && form.nbHours && form.responsableId){
+        if(!isNaN(Number(form.nbHours))){
+            const responsableTodos = todos.value.filter(todo => todo.responsableId == form.responsableId)
+            if(responsableTodos.length<3){
+                const responsableNbHours = responsableTodos.reduce((acc,todo)=>acc+todo.nbHours,Number(form.nbHours))
+                if(responsableNbHours<=10){
+                    
+                }
+                else{
+                    throw new Error("Ce responsable aura plus de 10 heures de travail avec cette tâche.")
+                }
+            }
+            else{
+                throw new Error("Vous ne pouvez pas ajouter une tâche additionnelle à cette personne.")
+            }
         }
-        todos.value.push({name:todoForm.todoName, nbHours:Number(todoForm.nbHours), responsableId : todoForm.selectedResponsable, isSelected:false})
-        console.log(todos)
-        resetInputs()
+        else{
+            throw new Error("Veuillez saisir un nombre pour le nombre d'heures.")
+        }
+    }
+    else{
+        throw new Error("Veuillez saisir tout les champs.")
+    }
+    
+   }
+
+    const addTodo = () => {
+        try{
+            generalVerificationForm(todoForm)
+            // Specific verification
+            if(todos.value.find(todo=>todo.name==todoForm.name)){
+                throw new Error("Un todo avec ce nom existe déjà.")
+            }
+            todos.value.push({name:todoForm.name, nbHours:Number(todoForm.nbHours), responsableId : todoForm.responsableId, isSelected:false})
+            resetInputs()
+        }
+        catch(e){
+            toaster.error(e.message)
+        }
     }
 
     const toggleSelect=(name)=>{
@@ -31,11 +63,18 @@ export const useTodoStore = defineStore('todos', () => {
     }
 
     const editTodo = (name, form) =>{
-        let currentTodo = todos.value.find(todo => todo.name == name)
-        if(currentTodo){
-            currentTodo.name = form.name
-            currentTodo.nbHours = Number(form.nbHours)
-            currentTodo.responsableId = form.responsableId
+        try{
+            generalVerificationForm(form)
+            let currentTodo = todos.value.find(todo => todo.name == name)
+            if(currentTodo){
+                currentTodo.name = form.name
+                currentTodo.nbHours = Number(form.nbHours)
+                currentTodo.responsableId = form.responsableId
+            }
+            return 'edited'
+        }
+        catch(e){
+            toaster.error(e.message)
         }
     }
 
@@ -49,9 +88,9 @@ export const useTodoStore = defineStore('todos', () => {
     }
 
     const resetInputs = () => {
-        todoForm.todoName = ''
+        todoForm.name = ''
         todoForm.nbHours = ''
-        todoForm.selectedResponsable = ''
+        todoForm.responsableId = ''
     }
 
     return{

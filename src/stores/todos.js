@@ -15,9 +15,8 @@ export const useTodoStore = defineStore('todos', () => {
     const todos = ref([])
 
    const generalVerificationForm = (form) =>{
-    console.log(form)
     if(form.name && form.nbHours && form.responsableId){
-        if(!isNaN(Number(form.nbHours))){
+        if(!isNaN(Number(form.nbHours)) && Number(form.nbHours)>0){
             const responsableTodos = todos.value.filter(todo => todo.responsableId == form.responsableId)
             if(responsableTodos.length<3){
                 const responsableNbHours = responsableTodos.reduce((acc,todo)=>acc+todo.nbHours,Number(form.nbHours))
@@ -33,7 +32,7 @@ export const useTodoStore = defineStore('todos', () => {
             }
         }
         else{
-            throw new Error("Veuillez saisir un nombre pour le nombre d'heures.")
+            throw new Error("Veuillez saisir un nombre positif non nul pour le champs nombre d'heures.")
         }
     }
     else{

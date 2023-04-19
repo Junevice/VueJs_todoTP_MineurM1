@@ -1,26 +1,34 @@
 <template>
-    <div class="flex" @dblclick="toggleIsModified(true)" v-if="!isModified">
-        <span>{{ name }}</span>
-        <span>{{ responsableStore.responsables.find(res => res.id == responsableId).name }}</span>
-        <span>{{ nbHours }}</span>
-        <div @click="todoStore.toggleSelect(name)">
-            <input class="pointer-events-none" type="checkbox" :checked="isSelected">
+    <div class="flex flex-col border-2 border-black/50 max-w-[500px] px-8 py-4 rounded-md cursor-cell" @dblclick="toggleIsModified(true)" v-if="!isModified">
+        <p><span class="italic">Nom de la todo : </span>{{ name }}</p>
+        <p><span class="italic">Nombre d'heures estimé : </span>{{ nbHours }} heures</p>
+        <p><span class="italic">Nom responsable : </span>{{ responsableStore.responsables.find(res => res.id == responsableId).name }} </p>
+        <div class="flex justify-end">
+            <div @click="todoStore.toggleSelect(name)" class="cursor-pointer">
+                <input class="pointer-events-none" type="checkbox" :checked="isSelected">
+            </div>
         </div>
     </div>
 
     <!-- Edition -->
-    <div class="flex gap-4" v-else>
+    <div class="flex flex-col border-2 border-black/50 max-w-[800px] px-8 py-4 rounded-md" v-else>
         <form action="" @submit.prevent="submitEdition(name, form)">
-            <input type="text" v-model="editionForm.name">
-            <input type="text" v-model="editionForm.nbHours">
-            <select name="" id="" v-model="editionForm.responsableId">
-                <option value="" disabled selected>Responsables</option>
-                <option :value="responsable.id" v-for="responsable in responsableStore.responsables" :key="responsable.id">{{ responsable.name }}</option>
-            </select>
-            <button type="submit">Edit todo</button>
-            
+            <div class="ml-8">
+                <div class="flex gap-8 my-4">
+                    <input type="text" class="border-2 border-black/50 rounded-md px-2 py-1" v-model="editionForm.name">
+                    <input type="text" class="border-2 border-black/50 rounded-md px-2 py-1" v-model="editionForm.nbHours">
+                    <select class="border-2 border-black/50 rounded-md px-2 py-1" v-model="editionForm.responsableId">
+                        <option value="" disabled selected>Responsables</option>
+                        <option :value="responsable.id" v-for="responsable in responsableStore.responsables" :key="responsable.id">{{ responsable.name }}</option>
+                    </select>
+                </div>
+                <div class="flex gap-8 my-4">
+                    <button type="submit" class="bg-black/80 text-white rounded-md px-4 py-2">Edit todo</button>
+                    <button class="bg-black/50 text-white rounded-md px-4 py-2" @click="toggleIsModified(false)">cancel</button>
+                </div>
+            </div>
         </form>
-        <button @click="toggleIsModified(false)">cancel</button>
+        
     </div>
     
 
@@ -79,7 +87,7 @@ const toggleIsModified = (bool) => {
 }
 
 const submitEdition = (name) =>{
-    
+    // AJOUTER VERIFICATION NOUVEAU NOM
     const edition = todoStore.editTodo(name, editionForm)
     if(edition=='edited'){
         toggleIsModified(!isModified)

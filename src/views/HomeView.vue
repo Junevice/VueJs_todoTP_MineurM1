@@ -25,7 +25,8 @@
 
         <div class="flex gap-8 my-4">
           <button type="submit" class="bg-black/80 text-white rounded-md px-4 py-2">Ajouter todo</button>
-          <button class="bg-black/80 text-white rounded-md px-4 py-2 disabled:opacity-50 " :disabled="todoStore.todos.every(todo=>todo.isSelected==false)" @click="todoStore.removeSelected">Delete selected todos</button>
+          <!-- Légèrement overkill pour les s :) ça me faisait rire je l'ai laissé. -->
+          <button class="bg-black/80 text-white rounded-md px-4 py-2 disabled:opacity-50 " :disabled="todoStore.todos.every(todo=>todo.isSelected==false)" @click="todoStore.removeSelected">Supprimer todo{{todoStore.todos.filter((todo=>todo.isSelected==true)).length>1 ? 's' : ''}} sélectionnée{{todoStore.todos.filter((todo=>todo.isSelected==true)).length>1 ? 's' : ''}} ({{ todoStore.todos.filter((todo=>todo.isSelected==true)).length }})</button>
         </div>
       </div>
     </form>

@@ -1,6 +1,6 @@
 <template>
   <main class="w-full min-h-screen px-64 py-16">
-    <h1 class="text-2xl mb-8">Todolist TP 1 Vue3</h1>
+    <h1 class="text-2xl mb-8">Todolist TP 1 Vue3 <span class="text-xl">- Rémy Lecomte</span></h1>
 
     <div class="my-8">
       <h2 class="text-lg font-semibold mb-4">Informations todolist </h2>
@@ -34,8 +34,24 @@
     <div>
       <h2 class="text-lg font-semibold">Todos :</h2>
       <h3 class="italic mb-4">Double cliquez sur une todo pour l'éditer</h3>
-      <div class="flex flex-col gap-4">
+      <div>
+        <h4 class="font-semibold italic mb-2">Filtrer par responsable</h4>
+        <div class="flex gap-8 mb-8">
+          <select class="border-2 border-black/50 rounded-md px-2 py-1" v-model="todoStore.filterResonsableId">
+            <option value="" disabled selected>Responsables</option>
+            <option :value="responsable.id" v-for="responsable in responsableStore.responsables" :key="responsable.id">{{ responsable.name }}</option>
+          </select>
+          <button class="bg-black/80 text-white text-sm rounded-md px-4" v-if="todoStore.filterResonsableId" @click="todoStore.resetFilter">Reset filtre</button>
+        </div>
+      </div>
+      
+      <div class="flex flex-col gap-4" v-if="!todoStore.filterResonsableId">
         <Todo v-for="todo in todoStore.todos" :name="todo.name" :responsableId="todo.responsableId" :nbHours="todo.nbHours" :isSelected="todo.isSelected" :key="todo.id"/>
+      </div>
+
+      <!-- Filtered -->
+      <div class="flex flex-col gap-4" v-else>
+        <Todo v-for="todo in todoStore.todos.filter(todo=>todo.responsableId==todoStore.filterResonsableId)" :name="todo.name" :responsableId="todo.responsableId" :nbHours="todo.nbHours" :isSelected="todo.isSelected" :key="todo.id"/>
       </div>
     </div>
 

@@ -13,33 +13,34 @@ export const useTodoStore = defineStore('todos', () => {
     })
     
     const todos = ref([])
+    const filterResonsableId = ref('')
 
-   const generalVerificationForm = (form) =>{
-    if(form.name && form.nbHours && form.responsableId){
-        if(!isNaN(Number(form.nbHours)) && Number(form.nbHours)>0){
-            const responsableTodos = todos.value.filter(todo => todo.responsableId == form.responsableId)
-            if(responsableTodos.length<3){
-                const responsableNbHours = responsableTodos.reduce((acc,todo)=>acc+todo.nbHours,Number(form.nbHours))
-                if(responsableNbHours<=10){
-                    
+
+    const generalVerificationForm = (form) =>{
+        if(form.name && form.nbHours && form.responsableId){
+            if(!isNaN(Number(form.nbHours)) && Number(form.nbHours)>0){
+                const responsableTodos = todos.value.filter(todo => todo.responsableId == form.responsableId)
+                if(responsableTodos.length<3){
+                    const responsableNbHours = responsableTodos.reduce((acc,todo)=>acc+todo.nbHours,Number(form.nbHours))
+                    if(responsableNbHours<=10){
+                        
+                    }
+                    else{
+                        throw new Error("Ce responsable aura plus de 10 heures de travail avec cette tâche.")
+                    }
                 }
                 else{
-                    throw new Error("Ce responsable aura plus de 10 heures de travail avec cette tâche.")
+                    throw new Error("Vous ne pouvez pas ajouter une tâche additionnelle à cette personne.")
                 }
             }
             else{
-                throw new Error("Vous ne pouvez pas ajouter une tâche additionnelle à cette personne.")
+                throw new Error("Veuillez saisir un nombre positif non nul pour le champs nombre d'heures.")
             }
         }
         else{
-            throw new Error("Veuillez saisir un nombre positif non nul pour le champs nombre d'heures.")
+            throw new Error("Veuillez saisir tout les champs.")
         }
     }
-    else{
-        throw new Error("Veuillez saisir tout les champs.")
-    }
-    
-   }
 
     const addTodo = () => {
         try{
@@ -92,13 +93,19 @@ export const useTodoStore = defineStore('todos', () => {
         todoForm.responsableId = ''
     }
 
+    const resetFilter = () => {
+        filterResonsableId.value=''
+    }
+
     return{
         todoForm,
+        filterResonsableId,
         addTodo,
         deleteTodo,
         toggleSelect,
         editTodo,
         removeSelected,
+        resetFilter,
         todos
     }
 
